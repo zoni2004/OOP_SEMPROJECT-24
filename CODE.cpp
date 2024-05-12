@@ -1,3 +1,4 @@
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Audio.hpp>
@@ -38,12 +39,13 @@ int main() {
         "#....#######..#...#######....#",
         "#0..........................0#",
         "##############################",
-        
+
     };
 
     Clock clock;
-    
-    RenderWindow window(VideoMode(mapwidth * cellsize+100, mapheight * cellsize), "Pac-Man Game");
+    const float movementSpeed = 1.0f;
+
+    RenderWindow window(VideoMode(mapwidth * cellsize + 100, mapheight * cellsize), "Pac-Man Game");
     SoundBuffer buffer1;
     SoundBuffer buffer2;
     SoundBuffer buffer3;
@@ -62,21 +64,21 @@ int main() {
     buffer5.loadFromFile("textures/eatghost.wav");
     buffer6.loadFromFile("textures/near.wav");
 
-    
-     Sound sound1;
-     Sound sound2;
-     Sound sound3;
-     Sound sound4;
-     Sound sound5;
-     Sound sound6;
+
+    Sound sound1;
+    Sound sound2;
+    Sound sound3;
+    Sound sound4;
+    Sound sound5;
+    Sound sound6;
 
 
-     sound1.setBuffer(buffer1);
-     sound2.setBuffer(buffer2);
-     sound3.setBuffer(buffer3);
-     sound4.setBuffer(buffer4);
-     sound5.setBuffer(buffer5);
-     sound6.setBuffer(buffer6);
+    sound1.setBuffer(buffer1);
+    sound2.setBuffer(buffer2);
+    sound3.setBuffer(buffer3);
+    sound4.setBuffer(buffer4);
+    sound5.setBuffer(buffer5);
+    sound6.setBuffer(buffer6);
 
 
     Font font;
@@ -86,7 +88,7 @@ int main() {
     RectangleShape loading(Vector2f(50, 0));
     loading.setFillColor(Color::Yellow);
     loading.setPosition(window.getSize().x - 80, 100);
-   
+
     Text readymsg;
     readymsg.setFont(font);
     readymsg.setString("READYYY");
@@ -98,13 +100,13 @@ int main() {
     winmsg.setString("YOU WON" + to_string(score));
     winmsg.setScale(1.5f, 1.5f);
 
-   
 
-    RectangleShape border(Vector2f(52, 602)); 
+
+    RectangleShape border(Vector2f(52, 602));
     border.setFillColor(Color::Transparent);
-    border.setOutlineColor(Color::White); 
-    border.setOutlineThickness(10); 
-    border.setPosition(window.getSize().x - 81, 99); 
+    border.setOutlineColor(Color::White);
+    border.setOutlineThickness(10);
+    border.setPosition(window.getSize().x - 81, 99);
 
     winmsg.setCharacterSize(24);
     winmsg.setFillColor(Color::Red);
@@ -113,24 +115,39 @@ int main() {
     Text msg;
     msg.setFont(font);
     msg.setScale(1.5f, 1.5f);
-    
+
     Text scoredis;
     scoredis.setFont(font);
     scoredis.setFillColor(Color::Red);
     scoredis.setPosition(window.getSize().x - 100, 20);
     scoredis.setScale(0.5f, 0.5f);
 
+    Texture pacManLeftTexture, pacManRightTexture, pacManUpTexture, pacManDownTexture;
+    pacManLeftTexture.loadFromFile("textures/pacmanleft.png");
+    pacManRightTexture.loadFromFile("textures/pacmanright.png");
+    pacManUpTexture.loadFromFile("textures/pacmanup.png");
+    pacManDownTexture.loadFromFile("textures/pacmandown.png");
+
+    Sprite pacManLeftSprite(pacManLeftTexture);
+    Sprite pacManRightSprite(pacManRightTexture);
+    Sprite pacManUpSprite(pacManUpTexture);
+    Sprite pacManDownSprite(pacManDownTexture);
+
+    pacManUpSprite.setScale(0.05f, 0.05f);
+    pacManDownSprite.setScale(0.05f, 0.05f);
+    pacManRightSprite.setScale(0.05f, 0.05f);
+    pacManLeftSprite.setScale(0.05f, 0.05f);
 
 
     msg.setCharacterSize(24);
     msg.setFillColor(Color::Red);
-    msg.setPosition(window.getSize().x / 2 - 150, window.getSize().y / 2 -60);
-    Texture wallTexture, dotTexture,dotbigTexture,pacManupTexture, pacManTexture, ghost1Texture, ghost4Texture, ghost2Texture, ghost3Texture, cherrytexture;
+    msg.setPosition(window.getSize().x / 2 - 150, window.getSize().y / 2 - 60);
+    Texture wallTexture, dotTexture, dotbigTexture, pacManupTexture, pacManTexture, ghost1Texture, ghost4Texture, ghost2Texture, ghost3Texture, cherrytexture;
     wallTexture.loadFromFile("textures/neonoutline.png");
     dotTexture.loadFromFile("textures/yellowdot.png");
     dotbigTexture.loadFromFile("textures/yellowdot.png");
     pacManTexture.loadFromFile("textures/pacman.png");
-    pacManupTexture.loadFromFile("textures/pacmanup.png");
+
     ghost1Texture.loadFromFile("textures/ghost1.png");
     ghost2Texture.loadFromFile("textures/pngegg.png");
     ghost3Texture.loadFromFile("textures/ghost3.png");
@@ -191,7 +208,7 @@ int main() {
     bool isgamewon = false;
     bool ghostvisible1 = true;
     Clock ghosttimer1;
-    int toggletime=0;
+    int toggletime = 0;
     int musictimer = 0;
     int lastmusic = 0;
 
@@ -250,7 +267,7 @@ int main() {
             sound1.play();
             window.draw(readymsg);
         }
-        
+
         else if (!isgamewon) {
             if (begin < 4005) {
                 gamenotready = true;
@@ -324,19 +341,19 @@ int main() {
             }
 
             bool ghostnear = false;
-            if (!ispaused){
+            if (!ispaused) {
                 float dist1 = sqrt(pow(pacmanx - ghost1x, 2) + pow(pacmany - ghost1y, 2));
-            float dist2 = sqrt(pow(pacmanx - ghost2x, 2) + pow(pacmany - ghost2y, 2));
-            float dist3 = sqrt(pow(pacmanx - ghost3x, 2) + pow(pacmany - ghost3y, 2));
-            float dist4 = sqrt(pow(pacmanx - ghost4x, 2) + pow(pacmany - ghost4y, 2));
-            if (dist1 < 2 || dist2 < 2 || dist3 < 2 || dist4 < 2) {
-                ghostnear = true;
-            }
+                float dist2 = sqrt(pow(pacmanx - ghost2x, 2) + pow(pacmany - ghost2y, 2));
+                float dist3 = sqrt(pow(pacmanx - ghost3x, 2) + pow(pacmany - ghost3y, 2));
+                float dist4 = sqrt(pow(pacmanx - ghost4x, 2) + pow(pacmany - ghost4y, 2));
+                if (dist1 < 2 || dist2 < 2 || dist3 < 2 || dist4 < 2) {
+                    ghostnear = true;
+                }
 
-            if (ghostnear) {
-                sound6.play();
+                if (ghostnear) {
+                    sound6.play();
+                }
             }
-        }
             bool conditionpriem = false;
 
             if ((!ischerryeaten && pacmanx == ghost1x && pacmany == ghost1y) ||
@@ -375,17 +392,17 @@ int main() {
                         }
                     }
                 }
-                pacManSprite.setPosition(pacmanx* cellsize, pacmany* cellsize);
+                pacManSprite.setPosition(pacmanx * cellsize, pacmany * cellsize);
                 window.draw(pacManSprite);
 
-                ghost1Sprite.setPosition(ghost1x* cellsize, ghost1y* cellsize);
+                ghost1Sprite.setPosition(ghost1x * cellsize, ghost1y * cellsize);
                 window.draw(ghost1Sprite);
 
-                ghost2Sprite.setPosition(ghost2x* cellsize, ghost2y* cellsize);
+                ghost2Sprite.setPosition(ghost2x * cellsize, ghost2y * cellsize);
                 window.draw(ghost2Sprite);
-                ghost3Sprite.setPosition(ghost3x* cellsize, ghost3y* cellsize);
+                ghost3Sprite.setPosition(ghost3x * cellsize, ghost3y * cellsize);
                 window.draw(ghost3Sprite);
-                ghost4Sprite.setPosition(ghost4x* cellsize, ghost4y* cellsize);
+                ghost4Sprite.setPosition(ghost4x * cellsize, ghost4y * cellsize);
                 window.draw(ghost4Sprite);
 
                 msg.setString("YOU LOST!\nYour Score is:" + to_string(score) + " \n\n\n\n\npress Esc to continue");
@@ -404,28 +421,28 @@ int main() {
                 if (pacmanmap[pacmany][pacmanx] == '0') {
                     pacmanmap[pacmany][pacmanx] = ' ';
                     sound2.play();
-                    score=score+10;
+                    score = score + 10;
                 }
 
                 int random1, random2, random3, random4;
 
                 static int movementTimer = 0;
-                static const int movementInterval = FPS * 8;
+                static const int movementInterval = FPS * 6;
                 static int previousmove1 = -1;
                 static int previousmove2 = -1;
                 static int previousmove3 = -1;
                 static int previousmove4 = -1;
 
-                if (starttime1 < 5005 && !gamenotready) {
+                if (starttime1 < 3005 && !gamenotready) {
                     starttime1++;
                 }
-                if (starttime2 < 30050 && !gamenotready) {
+                if (starttime2 < 7050 && !gamenotready) {
                     starttime2++;
                 }
-                if (starttime3 < 45050 && !gamenotready) {
+                if (starttime3 < 12050 && !gamenotready) {
                     starttime3++;
                 }
-                if (starttime4 < 60050 && !gamenotready) {
+                if (starttime4 < 15050 && !gamenotready) {
                     starttime4++;
                 }
                 if (starttime1 > 5000 || starttime2 > 5000 || starttime3 > 5000 || starttime4 > 5000) {
@@ -434,8 +451,8 @@ int main() {
 
                     if (movementTimer >= movementInterval) {
 
-                       
-                       
+
+
                         int dx1 = pacmanx - ghost1x;
                         int dy1 = pacmany - ghost1y;
                         int direction1;
@@ -481,7 +498,7 @@ int main() {
                             ghost1y++;
                         }
 
-                        if (starttime2 > 30000) {
+                        if (starttime2 > 7000) {
                             int dx2 = pacmanx - ghost2x;
                             int dy2 = pacmany - ghost2y;
                             int direction2;
@@ -528,7 +545,7 @@ int main() {
                             }
                         }
 
-                        if (starttime3 > 45000) {
+                        if (starttime3 > 12000) {
                             int dx3 = pacmanx - ghost3x;
                             int dy3 = pacmany - ghost3y;
                             int direction3;
@@ -574,7 +591,7 @@ int main() {
                                 ghost3y++;
                             }
                         }
-                        if (starttime4 > 60000) {
+                        if (starttime4 > 15000) {
                             int dx4 = pacmanx - ghost4x;
                             int dy4 = pacmany - ghost4y;
                             int direction4;
@@ -628,40 +645,41 @@ int main() {
                 if (Keyboard::isKeyPressed(Keyboard::Left) && !leftPressed && pacmanx > 0 && pacmanmap[pacmany][pacmanx - 1] != '#' && !gamenotready) {
                     pacmanx--;
                     leftPressed = true;
-
+                    
+                    pacManSprite = pacManLeftSprite;
                 }
                 else if (!Keyboard::isKeyPressed(Keyboard::Left)) {
                     leftPressed = false;
 
                 }
-
-                if (Keyboard::isKeyPressed(Keyboard::Right) && !rightPressed && pacmanx < mapwidth - 1 && pacmanmap[pacmany][pacmanx + 1] != '#' && !gamenotready) {
+                 if (Keyboard::isKeyPressed(Keyboard::Right) && !rightPressed && pacmanx < mapwidth - 1 && pacmanmap[pacmany][pacmanx + 1] != '#' && !gamenotready) {
                     pacmanx++;
                     rightPressed = true;
-
+                    
+                    pacManSprite = pacManRightSprite;
                 }
                 else if (!Keyboard::isKeyPressed(Keyboard::Right)) {
                     rightPressed = false;
                 }
-
                 if (Keyboard::isKeyPressed(Keyboard::Up) && !upPressed && pacmany > 0 && pacmanmap[pacmany - 1][pacmanx] != '#' && !gamenotready) {
                     pacmany--;
                     upPressed = true;
-                  
+                   
+                    pacManSprite = pacManUpSprite;
                 }
                 else if (!Keyboard::isKeyPressed(Keyboard::Up)) {
                     upPressed = false;
                 }
-
-                if (Keyboard::isKeyPressed(Keyboard::Down) && !downPressed && pacmany < mapheight - 1 && pacmanmap[pacmany + 1][pacmanx] != '#' && !gamenotready) {
+                 if (Keyboard::isKeyPressed(Keyboard::Down) && !downPressed && pacmany < mapheight - 1 && pacmanmap[pacmany + 1][pacmanx] != '#' && !gamenotready) {
                     pacmany++;
                     downPressed = true;
+                    pacManSprite = pacManDownSprite;
                 }
                 else if (!Keyboard::isKeyPressed(Keyboard::Down)) {
                     downPressed = false;
                 }
 
-               
+
 
                 scoredis.setString("SCORE: \n     " + to_string(score));
                 window.clear();
@@ -682,7 +700,7 @@ int main() {
                             dotSprite.setPosition(x * cellsize, y * cellsize);
                             window.draw(dotSprite);
                         }
-                       
+
                         else if (pacmanmap[y][x] == '%') {
                             cherrySprite.setPosition(x * cellsize, y * cellsize);
                             window.draw(cherrySprite);
@@ -703,19 +721,19 @@ int main() {
 
                 }
                 
-                pacManSprite.setPosition(pacmanx* cellsize, pacmany* cellsize);
+                pacManSprite.setPosition(pacmanx * cellsize, pacmany * cellsize);
                 window.draw(pacManSprite);
-            
-                    ghost1Sprite.setPosition(ghost1x * cellsize, ghost1y * cellsize);
-                    window.draw(ghost1Sprite);
-                  
-                    ghost2Sprite.setPosition(ghost2x * cellsize, ghost2y * cellsize);
-                    window.draw(ghost2Sprite);
-                    ghost3Sprite.setPosition(ghost3x * cellsize, ghost3y * cellsize);
-                    window.draw(ghost3Sprite);
-                    ghost4Sprite.setPosition(ghost4x * cellsize, ghost4y * cellsize);
-                    window.draw(ghost4Sprite);
-                
+
+                ghost1Sprite.setPosition(ghost1x * cellsize, ghost1y * cellsize);
+                window.draw(ghost1Sprite);
+
+                ghost2Sprite.setPosition(ghost2x * cellsize, ghost2y * cellsize);
+                window.draw(ghost2Sprite);
+                ghost3Sprite.setPosition(ghost3x * cellsize, ghost3y * cellsize);
+                window.draw(ghost3Sprite);
+                ghost4Sprite.setPosition(ghost4x * cellsize, ghost4y * cellsize);
+                window.draw(ghost4Sprite);
+
 
                 window.draw(scoredis);
                 window.draw(loading);
@@ -727,6 +745,6 @@ int main() {
             }
         }
     }
-    
+
     return 0;
 }
